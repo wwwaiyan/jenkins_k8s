@@ -23,7 +23,7 @@ pipeline {
       }
     }
 
-    stage('Pushing Image') {
+    stage('Pushing Image to Docker Hub') {
       environment {
                registryCredential = 'dockerhublogin'
            }
@@ -36,7 +36,7 @@ pipeline {
       }
     }
 
-    stage('Deploying App to Kubernetes') {
+    stage('Deploying App to Minikube') {
       steps {
         script {
           kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
