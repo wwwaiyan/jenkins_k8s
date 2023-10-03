@@ -38,12 +38,16 @@ pipeline {
 
     stage('Deploying App to Minikube') {
       steps {
+        // container('kubectl'){
+        //   withCredentials([kubeconfigFile(credentialsId: 'minikube')]) {
+        //     sh 'kubectl apply -f deploymentservice.yml --kubeconfig=/root/.kube/config'
+        //   }
+        // }
         script {
           kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
         }
       }
     }
-
   }
 
 }
