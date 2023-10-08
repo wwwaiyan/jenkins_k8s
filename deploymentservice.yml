@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: nodeserver
-        image: waiyansoe/nodeapp:latest
+        image: http://reg.minikube.local/homelab/nodeapp:latest
         ports:
         - containerPort: 3000
         

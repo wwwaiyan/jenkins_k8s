@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "waiyansoe/nodeapp:latest"
+    dockerimagename = "homelab/nodeapp:latest"
     dockerImage = ""
   }
 
@@ -23,13 +23,13 @@ pipeline {
       }
     }
 
-    stage('Pushing Image to Docker Hub') {
+    stage('Pushing Image to Harbor') {
       environment {
-               registryCredential = 'dockerhublogin'
+               registryCredential = 'harborlogin'
            }
       steps{
         script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
+          docker.withRegistry( 'http://reg.minikube.local', registryCredential ) {
             dockerImage.push("latest")
           }
         }
@@ -38,13 +38,13 @@ pipeline {
 
     stage('Deploying App to Minikube') {
       steps {
-        // container('kubectl'){
-        //   withCredentials([kubeconfigFile(credentialsId: 'minikube')]) {
-        //     sh 'kubectl apply -f deploymentservice.yml --kubeconfig=/root/.kube/config'
-        //   }
-        // }
-        script {
-          kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
+        container('kubectl'){
+          withCredentials([kubeconfigFile(credentialsId: 'minikube')]) {
+            sh 'kubectl apply -f deploymentservice.yml --kubeconfig=/root/.kube/config'
+          }
+        }
+        // script {
+        //   kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
         }
       }
     }
