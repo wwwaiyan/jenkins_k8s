@@ -40,12 +40,12 @@ pipeline {
       steps {
         container('kubectl'){
           withCredentials([kubeconfigFile(credentialsId: 'minikube')]) {
-            sh 'kubectl apply -f deploymentservice.yml --kubeconfig=/root/.kube/config'
+            sh 'kubectl apply -f deploymentservice.yml'
           }
         }
         // script {
         //   kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
-        }
+        // }
       }
     }
   }
