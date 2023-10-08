@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "homelab/nodeapp:latest"
+    dockerimagename = "reg.minikube.local/homelab/nodeapp:latest"
     dockerImage = ""
   }
 
