@@ -1,5 +1,4 @@
 pipeline {
-
   environment {
     dockerimagename = "reg.minikube.local/kekp/wy-cicd-1:latest"
     dockerImage = ""
@@ -8,10 +7,10 @@ pipeline {
   agent any
 
   stages {
-
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/wwwaiyan/jenkins_k8s.git'
+        // No need for explicit Git credentials for public repositories
+        checkout scm
       }
     }
 
@@ -19,7 +18,7 @@ pipeline {
       steps {
         script {
           // Build Docker image
-          dockerImage = docker.build(dockerimagename)
+          dockerImage = docker.build dockerimagename
         }
       }
     }
