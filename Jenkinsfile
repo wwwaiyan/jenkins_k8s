@@ -41,7 +41,7 @@ pipeline {
       steps {
         script {
           // Run the Docker container in Minikube
-          sh "docker run -d --name wy-cicd-1 -p 5000:3000 ${dockerimagename}"
+          sh "docker run --name test -d -p 9090:3000 ${dockerimagename}"
         }
       }
     }
