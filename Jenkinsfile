@@ -41,7 +41,7 @@ pipeline {
       steps {
         script {
           // Run the Docker container in Minikube
-          sh "docker run --name cicd3 -d -p 9090:3000 ${dockerimagename}"
+          sh "docker run --name cicd3 -d -p 9093:3000 ${dockerimagename}"
         }
       }
     }
