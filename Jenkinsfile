@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    dockerimagename = "reg.minikube.local/kdkp/wy-cicd-1:latest"
+    dockerimagename = "reg.minikube.local/kdkp/wy-cicd-2:3"
     dockerImage = ""
   }
 
@@ -37,11 +37,11 @@ pipeline {
       }
     }
 
-    stage('Deploying App to Minikube') {
+    stage('Deploying App on Docker') {
       steps {
         script {
           // Run the Docker container in Minikube
-          sh "docker run -d --name wy-cicd-1 -p 4000:4000 ${dockerimagename}"
+          sh "docker run -d --name wy-cicd-1 -p 5000:3000 ${dockerimagename}"
         }
       }
     }
