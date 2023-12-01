@@ -1,6 +1,6 @@
 pipeline {
   environment {
-    dockerimagename = "reg.minikube.local/kekp/wy-cicd-1:latest"
+    dockerimagename = "reg.minikube.local/kdkp/wy-cicd-1:latest"
     dockerImage = ""
   }
 
