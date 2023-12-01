@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    dockerimagename = "reg.minikube.local/homelab/nodeapp:latest"
+    dockerimagename = "reg.minikube.local/kekp/wy-cicd-1:latest"
     dockerImage = ""
   }
 
@@ -11,26 +11,28 @@ pipeline {
 
     stage('Checkout Source') {
       steps {
-        git 'https://github.com/w4an/jenkins_k8s.git'
+        git 'https://github.com/wwwaiyan/jenkins_k8s.git'
       }
     }
 
     stage('Build image') {
-      steps{
+      steps {
         script {
-          dockerImage = docker.build dockerimagename
+          // Build Docker image
+          dockerImage = docker.build(dockerimagename)
         }
       }
     }
 
     stage('Pushing Image to Harbor') {
       environment {
-               registryCredential = 'harborlogin'
-           }
-      steps{
+        registryCredential = 'harborlogin'
+      }
+      steps {
         script {
-          docker.withRegistry( 'http://reg.minikube.local', registryCredential ) {
-            dockerImage.push("latest")
+          // Push the Docker image to Harbor
+          docker.withRegistry('http://reg.minikube.local', registryCredential) {
+            dockerImage.push()
           }
         }
       }
@@ -38,16 +40,11 @@ pipeline {
 
     stage('Deploying App to Minikube') {
       steps {
-        container('kubectl'){
-          withCredentials([kubeconfigFile(credentialsId: 'minikube')]) {
-            sh 'kubectl apply -f deploymentservice.yml'
-          }
+        script {
+          // Run the Docker container in Minikube
+          sh "docker run -d --name wy-cicd-1 -p 4000:4000 ${dockerimagename}"
         }
-        // script {
-        //   kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
-        // }
       }
     }
   }
-
 }
