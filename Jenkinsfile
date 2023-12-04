@@ -32,7 +32,7 @@ pipeline {
       steps {
         script {
           // Configure kubectl with the provided kubeconfig
-          withKubeConfig([credentialsId: ' kubeConfig', ' ~/.kube/config']) {
+          withKubeConfig([credentialsId: ' kubeConfig', '/home/vagrant/jenkins_k8s/config']) {
             // Apply the Kubernetes configuration
             sh "kubectl apply -f deploymentservice.yml"
           }
