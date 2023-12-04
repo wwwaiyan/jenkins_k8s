@@ -10,13 +10,13 @@ spec:
     matchLabels:
       app: nodeapp
   template:
-    metadata:
+    metadata:kub
       labels:
         app: nodeapp 
     spec:
       containers:
       - name: nodeserver
-        image: reg.minikube.local/homelab/nodeapp
+        image: reg.minikube.local/kdkp/wy-cicd-2:3
         ports:
         - containerPort: 3000
         
