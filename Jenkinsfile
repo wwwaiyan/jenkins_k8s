@@ -1,7 +1,8 @@
 pipeline {
   environment {
-    dockerimagename = "reg.minikube.local/kdkp/wy-cicd-2:3"
-    dockerImage = ""
+    dockerImageName = "reg.minikube.local/kdkp/wy-cicd-2:3"
+    registryCredential = 'harborlogin'
+    kubeConfig = ' ~/.kube/config'
   }
 
   agent any
@@ -9,26 +10,16 @@ pipeline {
   stages {
     stage('Checkout Source') {
       steps {
-        // No need for explicit Git credentials for public repositories
         checkout scm
       }
     }
 
-    stage('Build image') {
+    stage('Build and Push Docker Image') {
       steps {
         script {
           // Build Docker image
-          dockerImage = docker.build dockerimagename
-        }
-      }
-    }
+          dockerImage = docker.build dockerImageName
 
-    stage('Pushing Image to Harbor') {
-      environment {
-        registryCredential = 'harborlogin'
-      }
-      steps {
-        script {
           // Push the Docker image to Harbor
           docker.withRegistry('http://reg.minikube.local', registryCredential) {
             dockerImage.push()
@@ -37,11 +28,14 @@ pipeline {
       }
     }
 
-    stage('Deploying App on Docker') {
+    stage('Deploy App to Minikube') {
       steps {
         script {
-          // Run the Docker container in Minikube
-          sh "kubectl apply -f deploymentservice.yml"
+          // Configure kubectl with the provided kubeconfig
+          withKubeConfig([credentialsId: ' kubeConfig', ' ~/.kube/config']) {
+            // Apply the Kubernetes configuration
+            sh "kubectl apply -f deploymentservice.yml"
+          }
         }
       }
     }
